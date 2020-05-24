@@ -1,0 +1,72 @@
+<html>
+    <head>
+        <title>My first three.js app</title>
+        <style>
+            body {
+                margin: 0;
+            }
+            canvas {
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="js/three.js"></script>
+        <script>
+            var scene = new THREE.Scene();
+            var color = new THREE.Color("skyblue");
+            scene.background = color;
+            var camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            var geometry = new THREE.SphereGeometry(2, 8, 8);
+            var material = new THREE.MeshPhongMaterial({
+                color: 0x00ff00,
+                flatShading: true
+            });
+            var cube = new THREE.Mesh(geometry, material);
+
+            for (let i = 0; i < 30; i++) {
+                new_cube = cube.clone();
+                new_cube.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20
+                );
+                scene.add(new_cube);
+            }
+
+            var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            scene.add(directionalLight);
+
+            var light = new THREE.AmbientLight(0x404040); // soft white light
+            scene.add(light);
+
+            camera.position.z = 50;
+
+            var animate = function () {
+                requestAnimationFrame(animate);
+
+                scene.traverse(obj => {
+                    if (
+                        obj.type == "Mesh" 
+                    ) {
+                        obj.rotation.x += 0.01;
+                        obj.rotation.y += 0.01;
+                    }
+                });
+                renderer.render(scene, camera);
+            };
+
+            animate();
+        </script>
+    </body>
+</html>
